@@ -55,7 +55,7 @@ Set these in Railway for the web service:
 Notes:
 
 - `CHAIN` should match Alchemy's network slug, for example `eth-mainnet`.
-- `APP_BASE_URL` should be the Railway public URL for the deployed app.
+- `APP_BASE_URL` is optional. If you set it, use the Railway public URL for the deployed app.
 - `DEFAULT_HASHTAG` can be `#SquigsAreWatching`.
 - `DATABASE_URL` must point to the Railway Postgres instance.
 
@@ -123,7 +123,7 @@ At startup, the app runs `prisma migrate deploy` so the required tables are crea
 - `OPENAI_API_KEY` and `OPENAI_MODEL` are used server-side in `/api/generate`.
 - `ALCHEMY_API_KEY`, `NFT_CONTRACT_ADDRESS`, and `CHAIN` are used server-side to discover minted NFTs and fetch metadata.
 - `DATABASE_URL` is used by Prisma for `GeneratedTweet` and `UsedToken`.
-- `APP_BASE_URL` is reserved for public app awareness and deployment-safe configuration.
+- `APP_BASE_URL` is optional and reserved for public app awareness and deployment-safe configuration.
 - `DEFAULT_HASHTAG`, `DEFAULT_DISCORD_URL`, and `DEFAULT_SITE_URL` are injected into prompt construction and control behavior.
 
 ## Accessing The Live App
@@ -178,7 +178,7 @@ After deployment, verify the production app by:
 
 - Missing required env vars will cause server-side validation errors.
 - Re-check every variable listed in `.env.example`.
-- Make sure `APP_BASE_URL` is a valid absolute URL.
+- If `APP_BASE_URL` is set, it must be a valid absolute URL.
 
 ## Minimal Local Notes
 
