@@ -46,6 +46,7 @@ Set these in Railway for the web service:
 - `OPENSEA_API_KEY`
 - `NFT_CONTRACT_ADDRESS`
 - `CHAIN`
+- `MAX_TOKEN_ID`
 - `DATABASE_URL`
 - `APP_BASE_URL`
 - `DEFAULT_HASHTAG`
@@ -55,6 +56,7 @@ Set these in Railway for the web service:
 Notes:
 
 - `CHAIN` should match an OpenSea-supported chain such as `ethereum`. The app also maps common legacy values like `eth-mainnet` to `ethereum`.
+- `MAX_TOKEN_ID` is optional. If set, the app will not select or fetch any token above that numeric ID.
 - `APP_BASE_URL` is optional. If you set it, use the Railway public URL for the deployed app.
 - `DEFAULT_HASHTAG` can be `#SquigsAreWatching`.
 - `DATABASE_URL` must point to the Railway Postgres instance.
@@ -121,7 +123,7 @@ At startup, the app runs `prisma migrate deploy` so the required tables are crea
 ## How Railway Env Vars Are Used
 
 - `OPENAI_API_KEY` and `OPENAI_MODEL` are used server-side in `/api/generate`.
-- `OPENSEA_API_KEY`, `NFT_CONTRACT_ADDRESS`, and `CHAIN` are used server-side to discover minted NFTs and fetch metadata.
+- `OPENSEA_API_KEY`, `NFT_CONTRACT_ADDRESS`, `CHAIN`, and optional `MAX_TOKEN_ID` are used server-side to discover minted NFTs and fetch metadata.
 - `DATABASE_URL` is used by Prisma for `GeneratedTweet` and `UsedToken`.
 - `APP_BASE_URL` is optional and reserved for public app awareness and deployment-safe configuration.
 - `DEFAULT_HASHTAG`, `DEFAULT_DISCORD_URL`, and `DEFAULT_SITE_URL` are injected into prompt construction and control behavior.

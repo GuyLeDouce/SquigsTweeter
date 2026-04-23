@@ -6,6 +6,14 @@ const envSchema = z.object({
   OPENSEA_API_KEY: z.string().min(1),
   NFT_CONTRACT_ADDRESS: z.string().min(1),
   CHAIN: z.string().min(1),
+  MAX_TOKEN_ID: z
+    .string()
+    .trim()
+    .optional()
+    .transform((value) => value || undefined)
+    .refine((value) => !value || /^\d+$/.test(value), {
+      message: "MAX_TOKEN_ID must be a whole number"
+    }),
   DATABASE_URL: z.string().min(1),
   APP_BASE_URL: z
     .string()
@@ -27,6 +35,7 @@ export function getEnv() {
     OPENSEA_API_KEY: process.env.OPENSEA_API_KEY,
     NFT_CONTRACT_ADDRESS: process.env.NFT_CONTRACT_ADDRESS,
     CHAIN: process.env.CHAIN,
+    MAX_TOKEN_ID: process.env.MAX_TOKEN_ID?.trim(),
     DATABASE_URL: process.env.DATABASE_URL,
     APP_BASE_URL: process.env.APP_BASE_URL?.trim(),
     DEFAULT_HASHTAG: process.env.DEFAULT_HASHTAG ?? "#SquigsAreWatching",
