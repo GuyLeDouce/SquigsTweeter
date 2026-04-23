@@ -1,0 +1,32 @@
+{
+  "name": "squigs-tweet-generator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "prisma migrate deploy && next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "next": "^14.2.0",
+    "openai": "^4.79.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.0",
+    "prisma": "^5.22.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  }
+}

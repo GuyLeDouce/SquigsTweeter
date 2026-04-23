@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model GeneratedTweet {
+  id             String   @id @default(cuid())
+  tokenId        String
+  nftName        String?
+  imageUrl       String
+  campaignMode   String
+  tone           String
+  lengthMode     String
+  ctaMode        String
+  hashtagEnabled Boolean
+  humanized      Boolean
+  mainTweet      String   @db.VarChar(280)
+  altTweet1      String   @db.VarChar(280)
+  altTweet2      String   @db.VarChar(280)
+  firstReply     String   @db.VarChar(280)
+  createdAt      DateTime @default(now())
+  favorite       Boolean  @default(false)
+  discarded      Boolean  @default(false)
+}
+
+model UsedToken {
+  id         String   @id @default(cuid())
+  tokenId    String   @unique
+  lastUsedAt DateTime @default(now())
+  useCount   Int      @default(1)
+}
