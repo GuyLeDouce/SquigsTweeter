@@ -3,7 +3,7 @@ import { z } from "zod";
 const envSchema = z.object({
   OPENAI_API_KEY: z.string().min(1),
   OPENAI_MODEL: z.string().min(1),
-  ALCHEMY_API_KEY: z.string().min(1),
+  OPENSEA_API_KEY: z.string().min(1),
   NFT_CONTRACT_ADDRESS: z.string().min(1),
   CHAIN: z.string().min(1),
   DATABASE_URL: z.string().min(1),
@@ -24,7 +24,7 @@ export function getEnv() {
   return envSchema.parse({
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_MODEL: process.env.OPENAI_MODEL,
-    ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
+    OPENSEA_API_KEY: process.env.OPENSEA_API_KEY,
     NFT_CONTRACT_ADDRESS: process.env.NFT_CONTRACT_ADDRESS,
     CHAIN: process.env.CHAIN,
     DATABASE_URL: process.env.DATABASE_URL,

@@ -1,6 +1,6 @@
 # Squigs Tweet Generator
 
-Squigs Tweet Generator is a browser-based Next.js web app for manually generating tweet copy for `@SquigsNFT`. It runs as a standard Railway web service, uses PostgreSQL through Prisma, pulls a random minted NFT from the configured contract with Alchemy, then asks OpenAI for:
+Squigs Tweet Generator is a browser-based Next.js web app for manually generating tweet copy for `@SquigsNFT`. It runs as a standard Railway web service, uses PostgreSQL through Prisma, pulls a random minted NFT from the configured contract with OpenSea, then asks OpenAI for:
 
 - 1 main tweet
 - 2 alternate tweets
@@ -35,7 +35,7 @@ On `/history`, you can:
 - Prisma ORM
 - PostgreSQL via `DATABASE_URL`
 - OpenAI Responses API
-- Alchemy NFT API
+- OpenSea NFT API
 
 ## Required Railway Environment Variables
 
@@ -43,7 +43,7 @@ Set these in Railway for the web service:
 
 - `OPENAI_API_KEY`
 - `OPENAI_MODEL`
-- `ALCHEMY_API_KEY`
+- `OPENSEA_API_KEY`
 - `NFT_CONTRACT_ADDRESS`
 - `CHAIN`
 - `DATABASE_URL`
@@ -54,7 +54,7 @@ Set these in Railway for the web service:
 
 Notes:
 
-- `CHAIN` should match Alchemy's network slug, for example `eth-mainnet`.
+- `CHAIN` should match an OpenSea-supported chain such as `ethereum`. The app also maps common legacy values like `eth-mainnet` to `ethereum`.
 - `APP_BASE_URL` is optional. If you set it, use the Railway public URL for the deployed app.
 - `DEFAULT_HASHTAG` can be `#SquigsAreWatching`.
 - `DATABASE_URL` must point to the Railway Postgres instance.
@@ -104,7 +104,7 @@ This app is already configured with Railway-friendly scripts:
 
 - `npm install` triggers `prisma generate`
 - `npm run build` builds the Next.js app
-- `npm run start` runs `prisma migrate deploy && next start`
+- `npm run start` runs `prisma migrate deploy && HOSTNAME=0.0.0.0 node .next/standalone/server.js`
 
 That means Railway can build and start the app as a normal Node web service without any local-only assumptions.
 
@@ -121,7 +121,7 @@ At startup, the app runs `prisma migrate deploy` so the required tables are crea
 ## How Railway Env Vars Are Used
 
 - `OPENAI_API_KEY` and `OPENAI_MODEL` are used server-side in `/api/generate`.
-- `ALCHEMY_API_KEY`, `NFT_CONTRACT_ADDRESS`, and `CHAIN` are used server-side to discover minted NFTs and fetch metadata.
+- `OPENSEA_API_KEY`, `NFT_CONTRACT_ADDRESS`, and `CHAIN` are used server-side to discover minted NFTs and fetch metadata.
 - `DATABASE_URL` is used by Prisma for `GeneratedTweet` and `UsedToken`.
 - `APP_BASE_URL` is optional and reserved for public app awareness and deployment-safe configuration.
 - `DEFAULT_HASHTAG`, `DEFAULT_DISCORD_URL`, and `DEFAULT_SITE_URL` are injected into prompt construction and control behavior.
@@ -152,7 +152,7 @@ After deployment, verify the production app by:
 ### NFT metadata loads poorly or some tokens fail
 
 - The app automatically skips broken NFT image records when choosing a random token.
-- If too many records fail, check that `NFT_CONTRACT_ADDRESS`, `CHAIN`, and `ALCHEMY_API_KEY` are correct.
+- If too many records fail, check that `NFT_CONTRACT_ADDRESS`, `CHAIN`, and `OPENSEA_API_KEY` are correct.
 - Some collections have incomplete metadata; the app will still generate copy from token identity plus any traits it can recover.
 
 ### Image preview works inconsistently

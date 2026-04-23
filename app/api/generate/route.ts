@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getNftByTokenId } from "@/lib/alchemy";
+import { getNftByTokenId } from "@/lib/opensea";
 import { saveGeneratedTweet } from "@/lib/db";
 import { generateTweets } from "@/lib/openai";
 import { markTokenUsed, getRecentGenerations } from "@/lib/repetition";
@@ -65,6 +65,7 @@ export async function POST(request: Request) {
       record
     });
   } catch (error) {
+    console.error("Generate route failed", error);
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Generation failed."
