@@ -383,10 +383,13 @@ async function fetchContractTokenIdsFallback() {
     throw new Error("Unable to determine minted supply from contract.");
   }
 
-  const cappedSupply =
-    maxTokenId === null ? totalSupply : Math.min(totalSupply, maxTokenId + 1);
+  const upperBound = maxTokenId === null ? totalSupply : Math.min(totalSupply, maxTokenId);
 
-  return Array.from({ length: cappedSupply }, (_value, index) => String(index));
+  if (upperBound < 1) {
+    return [];
+  }
+
+  return Array.from({ length: upperBound }, (_value, index) => String(index + 1));
 }
 
 async function fetchNftByTokenId(tokenId: string): Promise<NFTRecord | null> {
