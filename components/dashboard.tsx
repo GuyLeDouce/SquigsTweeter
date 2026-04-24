@@ -97,6 +97,7 @@ export function Dashboard() {
   const [feedback, setFeedback] = useState<string | null>(null);
 
   const canGenerateSame = Boolean(selectedNft?.tokenId);
+  const hasPreviewImage = Boolean(selectedNft?.imageUrl);
   const traitSummary = selectedNft?.traits ?? [];
 
   const updateControls = <K extends keyof GenerationControls>(
@@ -181,7 +182,7 @@ export function Dashboard() {
   };
 
   const downloadImage = async () => {
-    if (!selectedNft) {
+    if (!selectedNft?.imageUrl) {
       return;
     }
 
@@ -370,10 +371,16 @@ export function Dashboard() {
             {selectedNft ? (
               <div className="hero-layout">
                 <div className="image-wrap">
-                  <img
-                    src={selectedNft.imageUrl}
-                    alt={selectedNft.name ?? `Squig ${selectedNft.tokenId}`}
-                  />
+                  {selectedNft.imageUrl ? (
+                    <img
+                      src={selectedNft.imageUrl}
+                      alt={selectedNft.name ?? `Squig ${selectedNft.tokenId}`}
+                    />
+                  ) : (
+                    <div className="image-placeholder">
+                      Image unavailable for this token. Tweet generation can still use metadata.
+                    </div>
+                  )}
                 </div>
 
                 <div className="hero-content">
@@ -409,10 +416,10 @@ export function Dashboard() {
                     <button
                       type="button"
                       className="secondary-button"
-                      disabled={loading}
+                      disabled={loading || !hasPreviewImage}
                       onClick={downloadImage}
                     >
-                      Download Image
+                      {hasPreviewImage ? "Download Image" : "No Image Available"}
                     </button>
                     {result?.recordId ? (
                       <Link className="nav-chip" href="/history">

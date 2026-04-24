@@ -125,10 +125,16 @@ export function HistoryList() {
           {items.map((item) => (
             <article className="card history-card" key={item.id}>
               <div className="history-thumb">
-                <img
-                  src={item.imageUrl}
-                  alt={item.nftName ?? `Token ${item.tokenId}`}
-                />
+                {item.imageUrl ? (
+                  <img
+                    src={item.imageUrl}
+                    alt={item.nftName ?? `Token ${item.tokenId}`}
+                  />
+                ) : (
+                  <div className="image-placeholder">
+                    No image saved for this token.
+                  </div>
+                )}
               </div>
 
               <div>

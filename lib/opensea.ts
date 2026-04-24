@@ -451,14 +451,10 @@ async function fetchNftByTokenId(tokenId: string): Promise<NFTRecord | null> {
 
   const imageUrl = await validateImage(normalizeIpfsUrl(imageCandidate));
 
-  if (!imageUrl) {
-    return null;
-  }
-
   return {
     tokenId: metadata.identifier ?? metadata.token_id ?? tokenId,
     name: metadata.name ?? null,
-    imageUrl,
+    imageUrl: imageUrl ?? null,
     metadataUrl: normalizeIpfsUrl(metadata.metadata_url ?? null),
     description: metadata.description ?? null,
     traits: parseTraits(metadata.traits)
@@ -479,14 +475,10 @@ async function fetchNftByTokenIdFallback(tokenId: string): Promise<NFTRecord | n
   const metadata = await fetchMetadataJson(tokenUri);
   const imageUrl = await fetchImageCandidateFromMetadata(metadata);
 
-  if (!imageUrl) {
-    return null;
-  }
-
   return {
     tokenId,
     name: typeof metadata.name === "string" ? metadata.name : null,
-    imageUrl,
+    imageUrl: imageUrl ?? null,
     metadataUrl: normalizeIpfsUrl(tokenUri),
     description: typeof metadata.description === "string" ? metadata.description : null,
     traits: parseMetadataTraits(metadata)
@@ -541,14 +533,14 @@ export async function getRandomMintedNft(options?: { excludeTokenIds?: Set<strin
     }
   }
 
-  throw new Error("Unable to find a minted NFT with valid metadata and image from OpenSea.");
+  throw new Error("Unable to find a minted NFT with usable metadata.");
 }
 
 export async function getNftByTokenId(tokenId: string) {
   const nft = await fetchNftByTokenId(tokenId).catch(() => fetchNftByTokenIdFallback(tokenId));
 
   if (!nft) {
-    throw new Error(`Unable to load token ${tokenId} with valid metadata and image.`);
+    throw new Error(`Unable to load token ${tokenId} with usable metadata.`);
   }
 
   return nft;

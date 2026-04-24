@@ -27,7 +27,7 @@ export type TraitItem = {
 export type NFTRecord = {
   tokenId: string;
   name: string | null;
-  imageUrl: string;
+  imageUrl: string | null;
   metadataUrl: string | null;
   description: string | null;
   traits: TraitItem[];

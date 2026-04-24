@@ -18,7 +18,7 @@ export async function saveGeneratedTweet({
     data: {
       tokenId: nft.tokenId,
       nftName: nft.name,
-      imageUrl: nft.imageUrl,
+      imageUrl: nft.imageUrl ?? "",
       campaignMode: controls.campaignMode,
       tone: controls.tone,
       lengthMode: controls.lengthMode,
