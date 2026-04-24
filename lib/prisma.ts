@@ -1,6 +1,4 @@
-import "dotenv/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@/prisma/generated/client";
+import { PrismaClient } from "@prisma/client";
 import { getDatabaseUrl } from "@/lib/env";
 
 const globalForPrisma = globalThis as unknown as {
@@ -14,12 +12,8 @@ function createPrismaClient() {
     return null;
   }
 
-  const adapter = new PrismaPg({
-    connectionString
-  });
-
   return new PrismaClient({
-    adapter,
+    datasourceUrl: connectionString,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"]
   });
 }
