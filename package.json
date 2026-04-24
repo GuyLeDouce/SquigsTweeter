@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "start": "prisma migrate deploy && HOSTNAME=0.0.0.0 node .next/standalone/server.js",
+    "start": "prisma migrate deploy && next start -H 0.0.0.0 -p ${PORT:-3000}",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "lint": "next lint"
