@@ -1,3 +1,4 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import { getDatabaseUrl } from "@/lib/env";
 
@@ -12,8 +13,12 @@ function createPrismaClient() {
     return null;
   }
 
+  const adapter = new PrismaPg({
+    connectionString
+  });
+
   return new PrismaClient({
-    datasourceUrl: connectionString,
+    adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"]
   });
 }
