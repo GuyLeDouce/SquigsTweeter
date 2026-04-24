@@ -5,12 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "prisma migrate deploy && HOSTNAME=0.0.0.0 node .next/standalone/server.js",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
-    "lint": "next lint",
-    "postinstall": "prisma generate"
+    "lint": "next lint"
   },
   "dependencies": {
     "@prisma/client": "^7.8.0",
