@@ -10,6 +10,10 @@ export async function saveGeneratedTweet({
   controls: GenerationControls;
   content: GeneratedContent;
 }) {
+  if (!prisma) {
+    return null;
+  }
+
   return prisma.generatedTweet.create({
     data: {
       tokenId: nft.tokenId,

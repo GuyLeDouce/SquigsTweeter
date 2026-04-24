@@ -1,4 +1,4 @@
-import { getEnv } from "@/lib/env";
+import { getOpenSeaEnv } from "@/lib/env";
 import { fallbackIpfsUrls, normalizeIpfsUrl } from "@/lib/ipfs";
 import { NFTRecord, TraitItem } from "@/lib/types";
 
@@ -76,7 +76,7 @@ function getRpcUrls(chain: string) {
 }
 
 function getMaxTokenId() {
-  const env = getEnv();
+  const env = getOpenSeaEnv();
   return env.MAX_TOKEN_ID ? Number.parseInt(env.MAX_TOKEN_ID, 10) : null;
 }
 
@@ -96,7 +96,7 @@ function getOpenSeaBaseUrl() {
 }
 
 async function fetchOpenSeaJson<T>(path: string, init?: RequestInit) {
-  const env = getEnv();
+  const env = getOpenSeaEnv();
   const response = await fetch(`${getOpenSeaBaseUrl()}${path}`, {
     ...init,
     headers: {
@@ -166,7 +166,7 @@ function decodeAbiString(result: string) {
 }
 
 async function ethCall(data: string) {
-  const env = getEnv();
+  const env = getOpenSeaEnv();
   const rpcUrls = getRpcUrls(env.CHAIN);
   let lastError: unknown;
 
@@ -344,7 +344,7 @@ async function validateImage(urlValue: string | null | undefined) {
 }
 
 async function fetchContractTokenIds(): Promise<string[]> {
-  const env = getEnv();
+  const env = getOpenSeaEnv();
   const chain = getOpenSeaChain(env.CHAIN);
   const tokenIds = new Set<string>();
   let cursor: string | null | undefined;
@@ -397,7 +397,7 @@ async function fetchNftByTokenId(tokenId: string): Promise<NFTRecord | null> {
     throw new Error(`Token ${tokenId} exceeds MAX_TOKEN_ID.`);
   }
 
-  const env = getEnv();
+  const env = getOpenSeaEnv();
   const chain = getOpenSeaChain(env.CHAIN);
   const metadata = await fetchOpenSeaJson<OpenSeaMetadataResponse>(
     `/metadata/${chain}/${env.NFT_CONTRACT_ADDRESS}/${tokenId}`

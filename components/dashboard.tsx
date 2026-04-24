@@ -165,9 +165,13 @@ export function Dashboard() {
       setResult({
         nft: data.nft,
         content: data.content,
-        recordId: data.record.id
+        recordId: data.record?.id ?? ""
       });
-      setFeedback("Fresh copy generated.");
+      setFeedback(
+        data.record?.id
+          ? "Fresh copy generated."
+          : "Fresh copy generated. History storage is unavailable."
+      );
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Something went wrong.");
     } finally {

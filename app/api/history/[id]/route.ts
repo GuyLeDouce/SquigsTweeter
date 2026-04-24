@@ -14,6 +14,15 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!prisma) {
+      return NextResponse.json(
+        {
+          error: "History storage is unavailable because DATABASE_URL is not configured."
+        },
+        { status: 503 }
+      );
+    }
+
     const body = patchSchema.parse(await request.json());
     const item = await prisma.generatedTweet.update({
       where: {
@@ -38,6 +47,15 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!prisma) {
+      return NextResponse.json(
+        {
+          error: "History storage is unavailable because DATABASE_URL is not configured."
+        },
+        { status: 503 }
+      );
+    }
+
     await prisma.generatedTweet.update({
       where: {
         id: params.id

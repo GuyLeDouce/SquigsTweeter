@@ -1,11 +1,11 @@
 import OpenAI from "openai";
-import { getEnv } from "@/lib/env";
+import { getOpenAiEnv } from "@/lib/env";
 import { buildPrompt } from "@/lib/prompts";
 import { GenerationPayload } from "@/lib/types";
 import { validateGeneratedContent } from "@/lib/validation";
 
 export async function generateTweets(payload: GenerationPayload) {
-  const env = getEnv();
+  const env = getOpenAiEnv();
   const client = new OpenAI({
     apiKey: env.OPENAI_API_KEY
   });

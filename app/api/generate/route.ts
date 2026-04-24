@@ -55,9 +55,14 @@ export async function POST(request: Request) {
       nft,
       controls: body.controls,
       content
+    }).catch((error) => {
+      console.error("Saving generation failed", error);
+      return null;
     });
 
-    await markTokenUsed(nft.tokenId);
+    await markTokenUsed(nft.tokenId).catch((error) => {
+      console.error("Marking token used failed", error);
+    });
 
     return NextResponse.json({
       nft,

@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
 
 export async function getRecentGenerations(limit = 12) {
+  if (!prisma) {
+    return [];
+  }
+
   return prisma.generatedTweet.findMany({
     where: {
       discarded: false
@@ -19,6 +23,10 @@ export async function getRecentGenerations(limit = 12) {
 }
 
 export async function getRecentTokenIds(limit = 24) {
+  if (!prisma) {
+    return new Set<string>();
+  }
+
   const used = await prisma.usedToken.findMany({
     orderBy: {
       lastUsedAt: "desc"
@@ -33,6 +41,10 @@ export async function getRecentTokenIds(limit = 24) {
 }
 
 export async function markTokenUsed(tokenId: string) {
+  if (!prisma) {
+    return;
+  }
+
   await prisma.usedToken.upsert({
     where: {
       tokenId

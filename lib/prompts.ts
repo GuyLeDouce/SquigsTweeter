@@ -1,5 +1,5 @@
 import { GenerationPayload } from "@/lib/types";
-import { getEnv } from "@/lib/env";
+import { getAppConfig } from "@/lib/env";
 import { dedupeStrings } from "@/lib/utils";
 
 const CAMPAIGN_GUIDANCE: Record<string, string> = {
@@ -34,7 +34,7 @@ const TONE_GUIDANCE: Record<string, string> = {
 };
 
 export function buildPrompt({ nft, controls, recentExamples }: GenerationPayload) {
-  const env = getEnv();
+  const env = getAppConfig();
   const traits = nft.traits.length
     ? nft.traits.map((trait) => `${trait.trait_type}: ${trait.value}`).join("; ")
     : "No reliable traits available.";
