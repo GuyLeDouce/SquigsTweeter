@@ -313,16 +313,37 @@ async function validateImage(urlValue: string | null | undefined) {
   const candidates = fallbackIpfsUrls(urlValue);
 
   for (const candidate of candidates) {
+    const normalizedCandidate = candidate?.trim();
+
+    if (!normalizedCandidate) {
+      continue;
+    }
+
+    if (normalizedCandidate.startsWith("data:image/")) {
+      return normalizedCandidate;
+    }
+
     try {
-      let response = await fetch(candidate, {
-        method: "HEAD",
-        next: {
-          revalidate: 0
-        }
-      });
+      let response: Response;
+
+      try {
+        response = await fetch(normalizedCandidate, {
+          method: "HEAD",
+          next: {
+            revalidate: 0
+          }
+        });
+      } catch {
+        response = await fetch(normalizedCandidate, {
+          method: "GET",
+          next: {
+            revalidate: 0
+          }
+        });
+      }
 
       if (!response.ok || !(response.headers.get("content-type") ?? "").startsWith("image/")) {
-        response = await fetch(candidate, {
+        response = await fetch(normalizedCandidate, {
           method: "GET",
           next: {
             revalidate: 0
@@ -333,10 +354,29 @@ async function validateImage(urlValue: string | null | undefined) {
       const contentType = response.headers.get("content-type") ?? "";
 
       if (response.ok && contentType.startsWith("image/")) {
-        return candidate;
+        return normalizedCandidate;
       }
     } catch {
       continue;
+    }
+  }
+
+  return null;
+}
+
+async function fetchImageCandidateFromMetadata(metadata: Record<string, unknown>) {
+  const directCandidates = [
+    typeof metadata.image === "string" ? metadata.image : null,
+    typeof metadata.image_url === "string" ? metadata.image_url : null,
+    typeof metadata.image_data === "string" ? metadata.image_data : null,
+    typeof metadata.image_original_url === "string" ? metadata.image_original_url : null
+  ];
+
+  for (const candidate of directCandidates) {
+    const imageUrl = await validateImage(normalizeIpfsUrl(candidate));
+
+    if (imageUrl) {
+      return imageUrl;
     }
   }
 
@@ -437,14 +477,7 @@ async function fetchNftByTokenIdFallback(tokenId: string): Promise<NFTRecord | n
   }
 
   const metadata = await fetchMetadataJson(tokenUri);
-  const imageCandidate =
-    typeof metadata.image === "string"
-      ? metadata.image
-      : typeof metadata.image_url === "string"
-        ? metadata.image_url
-        : null;
-
-  const imageUrl = await validateImage(normalizeIpfsUrl(imageCandidate));
+  const imageUrl = await fetchImageCandidateFromMetadata(metadata);
 
   if (!imageUrl) {
     return null;
