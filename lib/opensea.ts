@@ -66,6 +66,9 @@ const PUBLIC_RPC_URLS: Record<string, string[]> = {
   ]
 };
 
+const BUENO_IMAGE_BASE_URL =
+  "https://assets.bueno.art/images/a49527dc-149c-4cbc-9038-d4b0d1dbf0b2/default";
+
 function getOpenSeaChain(chain: string) {
   return CHAIN_MAP[chain] ?? chain;
 }
@@ -364,6 +367,14 @@ async function validateImage(urlValue: string | null | undefined) {
   return null;
 }
 
+function getBuenoImageUrl(tokenId: string) {
+  return `${BUENO_IMAGE_BASE_URL}/${encodeURIComponent(tokenId)}`;
+}
+
+async function fetchBuenoImage(tokenId: string) {
+  return validateImage(getBuenoImageUrl(tokenId));
+}
+
 async function fetchImageCandidateFromMetadata(metadata: Record<string, unknown>) {
   const directCandidates = [
     typeof metadata.image === "string" ? metadata.image : null,
@@ -449,7 +460,9 @@ async function fetchNftByTokenId(tokenId: string): Promise<NFTRecord | null> {
     metadata.display_image_url ??
     metadata.animation_url;
 
-  const imageUrl = await validateImage(normalizeIpfsUrl(imageCandidate));
+  const imageUrl =
+    (await fetchBuenoImage(tokenId)) ??
+    (await validateImage(normalizeIpfsUrl(imageCandidate)));
 
   return {
     tokenId: metadata.identifier ?? metadata.token_id ?? tokenId,
@@ -473,7 +486,9 @@ async function fetchNftByTokenIdFallback(tokenId: string): Promise<NFTRecord | n
   }
 
   const metadata = await fetchMetadataJson(tokenUri);
-  const imageUrl = await fetchImageCandidateFromMetadata(metadata);
+  const imageUrl =
+    (await fetchBuenoImage(tokenId)) ??
+    (await fetchImageCandidateFromMetadata(metadata));
 
   return {
     tokenId,
