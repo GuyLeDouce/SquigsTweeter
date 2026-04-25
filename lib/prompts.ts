@@ -33,6 +33,39 @@ const TONE_GUIDANCE: Record<string, string> = {
   "shill-lite": "Slightly more promotive, but still human and not spammy."
 };
 
+const SQUIGS_CONTEXT = `
+Squigs are a 4,444 supply NFT collection from Ugly Labs. They are intergalactic beings who studied humanity's ugly online behavior, opened a portal to Earth, became NFTs in the crossing, and are still watching humans through the chaos of Web3.
+
+Squigs are not just profile pictures or static collectibles. They are a living digital brand built around lore, community participation, games, holder rewards, entertainment utility, and long-term ecosystem expansion.
+
+To Squigs, "Ugly" means more than appearance. It includes greed, chaos, hype cycles, scams, rug pulls, irrational behavior, overconfidence, vanity, abandonment, tribalism, and the weird imperfect behavior humans display online.
+
+Ugly Labs ecosystem notes:
+- UglyDex is the collector hub with profile cards, holder identity, trait scores, UglyPoints, badges, rankings, leaderboards, and progression.
+- $CHARM is the reward economy for holder rewards, games, incentives, prize loops, and future ecosystem access.
+- Holder systems connect wallet ownership to Discord roles, verification, perks, and trait-aware rewards.
+- Community systems include UglyBot, The Gauntlet, Squig Survival, InSquignito, lore, memes, events, contests, prize pools, and community-made content.
+- Squigs sit beside Charm of the Ugly and Ugly Monsters in a wider Ugly Labs collector ecosystem.
+
+Holder value can include ecosystem membership, games and competitions, reward opportunities, future experiments, community identity, lore participation, cross-project perks, trait-based recognition, contests, and prize events.
+
+Core philosophy:
+- "No Roadmap" does not mean no building.
+- Build first, talk second.
+- Evolve naturally.
+- Surprise holders.
+- Reward activity.
+- Let community shape culture.
+- Focus on retention over hype.
+- Make ownership fun again.
+
+Voice cues:
+- strange cartoon civilization invading Web3
+- funny, weird, sharp, self-aware, slightly unhinged
+- confident without corporate marketing polish
+- useful phrases when natural: Squigs are watching. Portal unstable. Ugly detected. Behaviour logged. Human error confirmed. Collect responsibly. Chaos approved.
+`.trim();
+
 export function buildPrompt({ nft, controls, recentExamples }: GenerationPayload) {
   const env = getAppConfig();
   const traits = nft.traits.length
@@ -82,13 +115,25 @@ Brand voice:
 - no generic AI phrasing
 - vary sentence openings
 - vary syntax and pacing
-- use NFT-specific traits when relevant
+- use NFT-specific traits only as optional inspiration
 
 NFT data:
 - token ID: ${nft.tokenId}
 - NFT name: ${nft.name ?? "Unknown"}
 - description: ${nft.description ?? "None"}
 - traits: ${traits}
+
+Squigs context:
+${SQUIGS_CONTEXT}
+
+Subject guidance:
+- Do not make every option specifically about this exact NFT.
+- Do not mention the token ID, "Squig #${nft.tokenId}", or the NFT name unless it genuinely improves that specific variant.
+- Use the selected NFT and traits as context, not a required subject.
+- A tweet can be about a trait vibe, Squigs lore, Ugly Labs ecosystem value, games, rewards, holder culture, Web3 behavior, collector psychology, current internet mood, or a simple relatable daily observation.
+- At least one of the three tweet variants should avoid direct reference to the selected NFT entirely.
+- At most one tweet variant may directly name the selected NFT or token number.
+- Avoid explaining the whole collection in every tweet. Let the first reply carry extra context when useful.
 
 Campaign mode:
 ${controls.campaignMode}: ${CAMPAIGN_GUIDANCE[controls.campaignMode]}

@@ -24,8 +24,6 @@ export function HistoryList() {
   const [feedback, setFeedback] = useState<string | null>(null);
 
   const loadItems = async () => {
-    setLoading(true);
-
     try {
       const response = await fetch("/api/history");
       const data = await response.json();

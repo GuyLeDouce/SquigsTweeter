@@ -11,9 +11,11 @@ const patchSchema = z.object({
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     if (!prisma) {
       return NextResponse.json(
         {
@@ -26,7 +28,7 @@ export async function PATCH(
     const body = patchSchema.parse(await request.json());
     const item = await prisma.generatedTweet.update({
       where: {
-        id: params.id
+        id
       },
       data: body
     });
@@ -44,9 +46,11 @@ export async function PATCH(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     if (!prisma) {
       return NextResponse.json(
         {
@@ -58,7 +62,7 @@ export async function DELETE(
 
     await prisma.generatedTweet.update({
       where: {
-        id: params.id
+        id
       },
       data: {
         discarded: true

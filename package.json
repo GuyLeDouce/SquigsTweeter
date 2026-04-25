@@ -9,27 +9,31 @@
     "start": "prisma migrate deploy && next start -H 0.0.0.0 -p ${PORT:-3000}",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
-    "next": "^14.2.0",
-    "openai": "^4.79.0",
-    "pg": "^8.16.3",
+    "next": "^16.2.4",
+    "openai": "^6.34.0",
+    "pg": "^8.20.0",
     "prisma": "^7.8.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "zod": "^3.24.1"
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^14.2.0",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.4",
     "tsx": "^4.20.6",
-    "typescript": "^5.7.2"
+    "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "@hono/node-server": "1.19.13",
+    "postcss": "8.5.10"
   },
   "engines": {
     "node": ">=20.19.0"
