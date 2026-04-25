@@ -24,13 +24,13 @@ const LENGTH_GUIDANCE: Record<string, string> = {
 };
 
 const TONE_GUIDANCE: Record<string, string> = {
-  bullish: "Confident, collector-conviction, but no fake guarantees or moonboy clichés.",
-  funny: "Dry, weird, internet-native humor. Do not write stand-up setup/punchline boilerplate.",
-  lore: "Symbolic, mystical, and referential without becoming unreadable.",
-  community: "Warm, in-group, and collective.",
-  collector: "Tasteful flex, connoisseur energy, aesthetic confidence.",
-  chaotic: "Unhinged in a controlled way. Strange wording is welcome if it still reads well.",
-  "shill-lite": "Slightly more promotive, but still human and not spammy."
+  bullish: "Confident, collector-conviction, and calm. Think 'culture remains' more than 'huge upside'.",
+  funny: "Dry, weird, internet-native humor. Observational, not stand-up setup/punchline boilerplate.",
+  lore: "Squigs as observers of humanity and Web3. Strange, mysterious, readable.",
+  community: "In-group pride, holder recognition, and shared jokes without sounding like a fan club newsletter.",
+  collector: "Tasteful flex, connoisseur energy, aesthetic confidence. Sell identity, not price.",
+  chaotic: "Slightly unhinged but controlled. Absurd is good if it still feels intentional.",
+  "shill-lite": "Soft sell through identity and curiosity. Never desperate, never 'buy now'."
 };
 
 const SQUIGS_CONTEXT = `
@@ -64,6 +64,80 @@ Voice cues:
 - funny, weird, sharp, self-aware, slightly unhinged
 - confident without corporate marketing polish
 - useful phrases when natural: Squigs are watching. Portal unstable. Ugly detected. Behaviour logged. Human error confirmed. Collect responsibly. Chaos approved.
+`.trim();
+
+const ACCOUNT_STRATEGY = `
+@SquigsNFT is not a corporate brand page. It should feel like part media brand, part meme page, part collector club, part lore portal, and part community growth engine.
+
+Primary jobs:
+- Grow attention from people who do not own Squigs yet.
+- Make holders proud to rep Squigs publicly.
+- Make Squigs feel like an active world, not a dormant collection.
+- Convert attention gently into Discord joins, site visits, buys, participation, reposts, and retention.
+- Build long-term memory: funny, weird, active, different.
+
+The account voice:
+- funny, smart, slightly unhinged, confident, self-aware
+- internet native, community-first, weird but intentional
+- chaotic but controlled
+- professional through taste and restraint, not through corporate polish
+
+The account should often speak as if Squigs are documenting human behavior from inside a malfunctioning portal.
+`.trim();
+
+const CONTENT_PILLARS = `
+Use these content pillars. Pick the one that best fits the campaign/tone, and make the three variants use different pillars when possible:
+- Lore: Squigs observing humanity and Web3. Example angle: Humans still buying tops. Incredible species.
+- Relatable social: emotions people feel online. Example angle: pretending not to check floor every 12 minutes.
+- Holder pride: holders feel early, sharp, and part of the joke. Example angle: Some collect hype. Others collect culture.
+- Builder proof: real things shipped, games, rewards, UglyDex, trait scoring, community tools.
+- Community highlight: holder memes, art, wins, screenshots, submissions, weird creativity.
+- Soft conversion: sell identity, not an item. Example angle: Some people collect JPEGs. Some collect future inside jokes.
+- Event/game energy: Squig Survival, The Gauntlet, $CHARM rewards, regret guaranteed.
+- Market perspective: attention rotates, culture remains; bear markets expose who kept building.
+`.trim();
+
+const POST_FORMATS = `
+Use real X-native formats:
+- one-line banger
+- dry lore observation
+- meme caption
+- reply-bait question
+- soft conversion line
+- holder-pride flex
+- builder receipt
+- thread starter
+- quote-tweet style reaction
+
+Preferred cadence:
+- short hook first
+- no over-explaining
+- one clean idea per post
+- sharp or funny ending
+- understate instead of oversell
+`.trim();
+
+const STYLE_EXAMPLES = `
+Good Squigs voice examples:
+- We regret to inform you the portal is working again.
+- Human behaviour remains fascinating.
+- Squigs detected another bad decision.
+- Supply finite. Chaos infinite.
+- We built more stuff while others argued.
+- Some collect hype. Others collect culture.
+- The weirdest people ended up here.
+- Attention rotates. Culture remains.
+- Gauntlet starts in 20 minutes. Regret guaranteed.
+
+Bad output to avoid:
+- GM family! Huge alpha coming soon!
+- Massive utility roadmap soon!
+- Don't miss out!!!
+- We are building something revolutionary.
+- Join our amazing community today.
+- This unique NFT showcases the perfect blend of art and utility.
+- In the ever-evolving world of Web3...
+- Get ready to unlock exclusive benefits.
 `.trim();
 
 export function buildPrompt({ nft, controls, recentExamples }: GenerationPayload) {
@@ -100,22 +174,20 @@ export function buildPrompt({ nft, controls, recentExamples }: GenerationPayload
   return `
 You are writing manual Twitter copy for @SquigsNFT and Ugly Labs.
 
-Brand voice:
-- human
-- witty
-- weird
-- collectible
-- lore-aware
-- web3-native
-- not corporate
-- not repetitive
-- not spammy
-- no fake hype
-- no roadmap promises
-- no generic AI phrasing
-- vary sentence openings
-- vary syntax and pacing
-- use NFT-specific traits only as optional inspiration
+Write like the Squigs X account itself, not like an assistant writing promotional copy.
+
+Non-negotiable voice rules:
+- Funny, sharp, professional, and weird.
+- Sound alive and culturally aware.
+- Make it worth following even for people who do not own the NFTs.
+- Sell identity, culture, activity, and curiosity before selling the collection.
+- Use NFT-specific traits only as optional inspiration.
+- Prefer short concrete phrasing over polished marketing sentences.
+- Use fragments when they sound better.
+- Leave some mystery. Do not explain every joke.
+- No corporate voice, no fake hype, no roadmap promises, no generic AI phrasing.
+- No "GM family", "huge alpha", "don't miss out", "revolutionary", "unlock utility", or "ever-evolving Web3" energy.
+- Do not sound grateful, thrilled, excited to announce, or proud to present.
 
 NFT data:
 - token ID: ${nft.tokenId}
@@ -125,6 +197,18 @@ NFT data:
 
 Squigs context:
 ${SQUIGS_CONTEXT}
+
+Account strategy:
+${ACCOUNT_STRATEGY}
+
+Content pillars:
+${CONTENT_PILLARS}
+
+Post formats:
+${POST_FORMATS}
+
+Voice examples:
+${STYLE_EXAMPLES}
 
 Subject guidance:
 - Do not make every option specifically about this exact NFT.
@@ -148,7 +232,11 @@ Output instructions:
 - Write 1 main tweet, 2 alternate tweets, and 1 first reply.
 - Every tweet and reply must be under 280 characters.
 - Make the three tweet variants feel genuinely different in hook, structure, and rhythm.
+- The three variants should not all be sales posts. Aim for entertainment first unless campaign mode requires otherwise.
+- At least one variant should be a one-line banger or dry observation.
+- At least one variant should feel funny, absurd, or culturally sharp.
 - The first reply should support the main tweet, not repeat it.
+- If adding context in the first reply, make it feel like a follow-up from the account, not a brochure.
 - ${ctaInstruction}
 - ${hashtagInstruction}
 - ${humanizedInstruction}

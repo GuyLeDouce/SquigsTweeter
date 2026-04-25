@@ -13,6 +13,38 @@ function normalized(value: string) {
   return value.replace(/\s+/g, " ").trim();
 }
 
+const blockedPhrases = [
+  /\bgm\s+(family|fam|frens)\b/i,
+  /\bhuge alpha\b/i,
+  /\bmassive utility\b/i,
+  /\bdon'?t miss out\b/i,
+  /\brevolutionary\b/i,
+  /\bever[- ]evolving\b/i,
+  /\bunlock (exclusive )?(benefits|utility|value|opportunities)\b/i,
+  /\bjoin our (amazing|incredible|vibrant) community\b/i,
+  /\bwe (are|'re) (thrilled|excited|proud) to (announce|present|share)\b/i,
+  /\bperfect blend of\b/i,
+  /\bgame[- ]changer\b/i,
+  /\btake (your|the) .* to the next level\b/i
+];
+
+function assertNoSlopPhrases(content: GeneratedContent) {
+  const fields = [
+    content.mainTweet,
+    content.altTweet1,
+    content.altTweet2,
+    content.firstReply
+  ];
+
+  const blocked = fields.find((field) =>
+    blockedPhrases.some((pattern) => pattern.test(field))
+  );
+
+  if (blocked) {
+    throw new Error(`Model output used generic promo phrasing: "${blocked}"`);
+  }
+}
+
 export function validateGeneratedContent(data: unknown): GeneratedContent {
   const parsed = contentSchema.parse(data);
 
@@ -33,6 +65,8 @@ export function validateGeneratedContent(data: unknown): GeneratedContent {
   if (distinctCount < 3) {
     throw new Error("Model output did not provide distinct tweet variants.");
   }
+
+  assertNoSlopPhrases(cleaned);
 
   return cleaned;
 }
