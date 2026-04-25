@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GeneratedContent } from "@/lib/types";
+import { GeneratedContent, GenerationPayload } from "@/lib/types";
 
 const contentSchema = z.object({
   hookStyle: z.string().min(3).max(120),
@@ -45,7 +45,61 @@ function assertNoSlopPhrases(content: GeneratedContent) {
   }
 }
 
-export function validateGeneratedContent(data: unknown): GeneratedContent {
+function escapedPattern(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function getCharacterAnchors(payload: GenerationPayload) {
+  const anchors = new Set<string>();
+  const tokenId = payload.nft.tokenId.trim();
+
+  if (tokenId) {
+    anchors.add(`#${tokenId}`);
+    anchors.add(`Squig #${tokenId}`);
+    anchors.add(`Token #${tokenId}`);
+  }
+
+  const name = payload.nft.name?.trim();
+
+  if (name && !/^squig #?\d+$/i.test(name)) {
+    anchors.add(name);
+  }
+
+  for (const trait of payload.nft.traits) {
+    const value = trait.value.trim();
+
+    if (value.length >= 3 && !/^(none|unknown|n\/a)$/i.test(value)) {
+      anchors.add(value);
+    }
+  }
+
+  return [...anchors].slice(0, 12);
+}
+
+function assertCharacterAnchored(content: GeneratedContent, payload: GenerationPayload) {
+  const anchors = getCharacterAnchors(payload);
+
+  if (!anchors.length) {
+    return;
+  }
+
+  const pattern = new RegExp(
+    anchors.map((anchor) => escapedPattern(anchor)).join("|"),
+    "i"
+  );
+
+  const tweets = [content.mainTweet, content.altTweet1, content.altTweet2];
+  const anchoredCount = tweets.filter((tweet) => pattern.test(tweet)).length;
+
+  if (anchoredCount < 2) {
+    throw new Error("Model output did not connect enough tweet variants to the selected Squig.");
+  }
+}
+
+export function validateGeneratedContent(
+  data: unknown,
+  payload?: GenerationPayload
+): GeneratedContent {
   const parsed = contentSchema.parse(data);
 
   const cleaned: GeneratedContent = {
@@ -67,6 +121,10 @@ export function validateGeneratedContent(data: unknown): GeneratedContent {
   }
 
   assertNoSlopPhrases(cleaned);
+
+  if (payload) {
+    assertCharacterAnchored(cleaned, payload);
+  }
 
   return cleaned;
 }

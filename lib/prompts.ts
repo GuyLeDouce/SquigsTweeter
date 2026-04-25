@@ -4,17 +4,17 @@ import { dedupeStrings } from "@/lib/utils";
 
 const CAMPAIGN_GUIDANCE: Record<string, string> = {
   Everyday:
-    "Keep it natural and collector-native. Lead with observation, visual charm, or a subtle flex. CTA should feel optional.",
+    "Use the selected Squig as a daily character post. Lead with its visible vibe, traits, or token identity, then connect it to the active Squigs world.",
   "Mint Push":
-    "Frame the NFT like a live reason to pay attention right now. Hooks can be sharper, urgency can increase slightly, but do not sound like a spam bot.",
+    "Make this specific Squig feel like a reason to enter the collection now. Use scarcity and identity, not panic or spam.",
   "Community Spotlight":
-    "Center the community, culture, and shared obsession. Make the post feel like it belongs in a real collector timeline, not ad copy.",
+    "Make the selected Squig feel like a member of the community. Connect its character to holder pride, culture, inside jokes, or participation.",
   "Lore Post":
-    "Lean into myth, weirdness, symbolism, and Squigs world-building. The language can be poetic or uncanny as long as it stays readable.",
+    "Treat this Squig as a creature from the portal. Use its traits as lore evidence and tie it into the wider Squigs mythology.",
   "Game/Event Post":
-    "Write like this NFT is part of an event, drop, activation, or ongoing moment. The structure should feel timely and action-aware.",
+    "Make this Squig feel ready for a live event, game, reward loop, or community activation. The post should feel timely and action-aware.",
   "Collector Flex":
-    "Make the post feel like a tasteful but undeniable flex. The hook should signal rarity, visual punch, or taste without sounding desperate."
+    "Make this specific Squig feel like a tasteful holder flex. Signal character, taste, rarity, or visual punch without begging for attention."
 };
 
 const LENGTH_GUIDANCE: Record<string, string> = {
@@ -158,10 +158,10 @@ export function buildPrompt({ nft, controls, recentExamples }: GenerationPayload
 
   const ctaInstruction =
     controls.ctaMode === "discord"
-      ? "Include a subtle Discord CTA using the provided Discord URL only if it feels natural."
+      ? "CTA mode is Discord. At least one tweet or the first reply should naturally invite people into the community/portal using the Discord URL. Make it feel like joining active weird people, not a generic server invite."
       : controls.ctaMode === "website"
-        ? "Include a subtle website CTA using the provided site URL only if it feels natural."
-        : "Do not include any call to action or outbound link language.";
+        ? "CTA mode is Website. At least one tweet or the first reply should naturally point people to the site using the Website URL. Frame it as seeing the collection, UglyDex, ownership, or the wider ecosystem, not generic traffic bait."
+        : "CTA mode is None. Do not include links or direct CTA language. The post should create desire through character, ownership identity, and active community leadership.";
 
   const hashtagInstruction = controls.hashtagEnabled
     ? "Append the configured hashtag only when it feels natural."
@@ -210,14 +210,14 @@ ${POST_FORMATS}
 Voice examples:
 ${STYLE_EXAMPLES}
 
-Subject guidance:
-- Do not make every option specifically about this exact NFT.
-- Do not mention the token ID, "Squig #${nft.tokenId}", or the NFT name unless it genuinely improves that specific variant.
-- Use the selected NFT and traits as context, not a required subject.
-- A tweet can be about a trait vibe, Squigs lore, Ugly Labs ecosystem value, games, rewards, holder culture, Web3 behavior, collector psychology, current internet mood, or a simple relatable daily observation.
-- At least one of the three tweet variants should avoid direct reference to the selected NFT entirely.
-- At most one tweet variant may directly name the selected NFT or token number.
-- Avoid explaining the whole collection in every tweet. Let the first reply carry extra context when useful.
+Character-first guidance:
+- The generated Squig is the anchor. Every tweet variant must clearly connect to this selected character through its token ID, name, visible vibe, traits, expression, role, or imagined behavior.
+- Do not write generic collection posts that could apply to any Squig without adjustment.
+- You may mention "Squig #${nft.tokenId}" or the NFT name when useful, but do not force the same label into every variant.
+- If traits are available, use at least one trait or trait-inspired detail across the three tweet variants.
+- Use the selected Squig as a doorway into the wider collection: ownership, active leadership, holder culture, games, rewards, UglyDex, lore, and community energy.
+- The collection perspective should sound like a team/account keeping a living community active, not like a passive floor-price account.
+- Avoid making every tweet a full collection explainer. Character first, collection meaning second.
 
 Campaign mode:
 ${controls.campaignMode}: ${CAMPAIGN_GUIDANCE[controls.campaignMode]}
@@ -232,11 +232,15 @@ Output instructions:
 - Write 1 main tweet, 2 alternate tweets, and 1 first reply.
 - Every tweet and reply must be under 280 characters.
 - Make the three tweet variants feel genuinely different in hook, structure, and rhythm.
-- The three variants should not all be sales posts. Aim for entertainment first unless campaign mode requires otherwise.
-- At least one variant should be a one-line banger or dry observation.
-- At least one variant should feel funny, absurd, or culturally sharp.
+- Main tweet: strongest character-led version for the selected campaign mode and tone.
+- Alternate 1: same selected Squig, different angle or format.
+- Alternate 2: same selected Squig, more collection/ownership/community leadership angle.
+- The three variants should change based on campaign mode, tone, and CTA mode. Do not reuse the same structure with different adjectives.
+- The three variants should not all be sales posts. The account is building attention and loyalty, not shouting at buyers.
+- At least one variant should be a one-line banger or dry observation rooted in this Squig.
+- At least one variant should connect this Squig to holder pride, ongoing building, games, rewards, or community activity.
 - The first reply should support the main tweet, not repeat it.
-- If adding context in the first reply, make it feel like a follow-up from the account, not a brochure.
+- First reply: add leadership/ownership context for the collection. Mention why Squigs are being kept active through community, lore, games, rewards, or builder motion when it fits.
 - ${ctaInstruction}
 - ${hashtagInstruction}
 - ${humanizedInstruction}

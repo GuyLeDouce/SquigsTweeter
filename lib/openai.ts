@@ -19,7 +19,8 @@ export async function generateTweets(payload: GenerationPayload) {
         input: [
           {
             role: "system",
-            content: "You write sharp, collector-native tweet copy and return JSON only."
+            content:
+              "You write character-led @SquigsNFT tweet copy that reflects the chosen campaign, tone, and CTA. Return JSON only."
           },
           {
             role: "user",
@@ -58,7 +59,7 @@ export async function generateTweets(payload: GenerationPayload) {
 
       const outputText = response.output_text;
       const parsed = JSON.parse(outputText);
-      return validateGeneratedContent(parsed);
+      return validateGeneratedContent(parsed, payload);
     } catch (error) {
       lastError = error;
     }
